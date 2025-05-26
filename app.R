@@ -7,8 +7,11 @@ library(waiter)
 library(fontawesome)
 
 # Load data lokal
-benchmark_df <- read.csv("Benchmark_Cyclical_file.csv")
-perusahaan_df <- read.csv("Perusahaan_Cyclical_file.csv")
+benchmark_df <- read.csv("C:/Users/Marsel/Semester 2/ESG_Metree_Analysis/Benchmark_Cyclical_file.csv")
+perusahaan_df <- read.csv("C:/Users/Marsel/Semester 2/ESG_Metree_Analysis/Perusahaan_Cyclical_file.csv")
+if (!"Sektor" %in% colnames(perusahaan_df)) {
+  perusahaan_df$Sektor <- "Cyclical"
+}
 
 # Custom Theme
 theme_custom <- bs_theme(
@@ -114,7 +117,7 @@ ui <- navbarPage(
                "))
              ),
              
-             div(HTML("<i class='fa-solid fa-leaf'></i> Smart Investors use <b>Metree</b>"), class = "main-title"),
+             div(HTML("<i class='fa-solid fa-recycle'></i> Smart Investors use <b>Metree</b>"), class = "main-title"),
              
              sidebarLayout(
                sidebarPanel(
@@ -181,12 +184,15 @@ ui <- navbarPage(
   ),
   
   
-  tabPanel("Automatic Input",
+  tabPanel("Data Siap Pakai",
            fluidPage(
              div(HTML("<i class='fa-solid fa-database'></i> Smart Investors use <b>Metree</b>"), class = "main-title"),
              fluidRow(
                column(6,
-                      tags$h4("📂 Upload & Pilih Perusahaan"),
+                      tags$h4("📂 Pilih Sektor & Perusahaan"),
+                      selectInput("selected_sector", "Pilih Sektor", 
+                                  choices = unique(perusahaan_df$Sektor), 
+                                  selected = unique(perusahaan_df$Sektor)[1]),
                       uiOutput("select_company")
                ),
                column(6,
@@ -201,8 +207,9 @@ ui <- navbarPage(
                  verbatimTextOutput("compare_result")
              )
            )
+      )
   )
-)
+
 
 server <- function(input, output, session) {
   
@@ -211,12 +218,12 @@ server <- function(input, output, session) {
   })
   
   observeEvent(input$go_lanjutan, {
-    updateNavbarPage(session, "navbar", selected = "🧩 Lanjutkan dari File")
+    updateNavbarPage(session, "navbar", selected = "Analisis Lanjutan")
   })
   
   
   observeEvent(input$go_auto, {
-    updateNavbarPage(session, "navbar", selected = "Automatic Input")
+    updateNavbarPage(session, "navbar", selected = "Data Siap Pakai")
   })
   
   output$ratios <- renderPrint({
@@ -394,9 +401,13 @@ server <- function(input, output, session) {
   perusahaan_data <- reactive({ perusahaan_df })
   
   output$select_company <- renderUI({
-    req(perusahaan_data())
-    selectInput("chosen_company", "Pilih Perusahaan", choices = perusahaan_data()$Nama)
+    req(input$selected_sector)
+    perusahaan_terfilter <- perusahaan_df %>%
+      filter(Sektor == input$selected_sector)
+    
+    selectInput("chosen_company", "Pilih Perusahaan", choices = perusahaan_terfilter$Nama)
   })
+  
   
   output$compare_result <- renderPrint({
     req(input$chosen_company)
@@ -452,3 +463,4 @@ server <- function(input, output, session) {
 
 # Run App
 shinyApp(ui = ui, server = server)
+
