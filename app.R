@@ -7,8 +7,8 @@ library(waiter)
 library(fontawesome)
 
 # Load data lokal
-benchmark_df <- read.csv("C:/Users/Marsel/Semester 2/ESG_Metree_Analysis/Benchmark_Cyclical_file.csv")
-perusahaan_df <- read.csv("C:/Users/Marsel/Semester 2/ESG_Metree_Analysis/Perusahaan_Cyclical_file.csv")
+benchmark_df <- read.csv("Benchmark_Cyclical_file.csv")
+perusahaan_df <- read.csv("Perusahaan_Cyclical_file.csv")
 if (!"Sektor" %in% colnames(perusahaan_df)) {
   perusahaan_df$Sektor <- "Cyclical"
 }
