@@ -2,6 +2,20 @@
 
 **Metree ESG Analyzer** adalah aplikasi interaktif berbasis **R Shiny** untuk membantu investor dan pelaku bisnis dalam menilai performa ESG (Environmental, Social, Governance) perusahaan dari sisi rasio keuangan. Aplikasi ini mempermudah proses input data, analisis lanjutan, hingga pemanfaatan data siap pakai secara visual dan interaktif.
 
+⚠️ Wajib: Install Dulu Package Ini
+
+Sebelum menjalankan aplikasi ini, **pastikan kamu sudah menginstal semua package berikut di R/RStudio**:
+
+install.packages(c(
+  "shiny", 
+  "dplyr", 
+  "shinythemes", 
+  "bslib", 
+  "shinyWidgets", 
+  "waiter", 
+  "fontawesome"
+))
+
 ---
 
 ## 📦 Fitur Utama
